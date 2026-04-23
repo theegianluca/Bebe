@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createStaticClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Navigation } from '@/components/Navigation'
 import { MasonryGallery } from '@/components/MasonryGallery'
@@ -9,7 +9,7 @@ export const revalidate = 60
 interface Props { params: { slug: string } }
 
 export async function generateStaticParams() {
-  const supabase = createClient()
+  const supabase = createStaticClient()
   const { data } = await supabase.from('categories').select('slug')
   return (data ?? []).map((c) => ({ slug: c.slug }))
 }

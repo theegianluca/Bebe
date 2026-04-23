@@ -44,7 +44,7 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
     const filePath = `uploads/${fileName}`
 
     const { error: uploadError } = await supabase.storage
-      .from('bebe-storage')
+      .from('items')
       .upload(filePath, file)
 
     if (uploadError) {
@@ -54,7 +54,7 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
     }
 
     const { data: { publicUrl } } = supabase.storage
-      .from('bebe-storage')
+      .from('items')
       .getPublicUrl(filePath)
 
     setFormData({ ...formData, image_url: publicUrl })
@@ -90,9 +90,10 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
     if (!confirm('Are you sure?')) return
     
     if (item.image_url) {
-      const path = item.image_url.split('/').pop()
+      const parts = item.image_url.split('/')
+      const path = parts[parts.length - 1]
       if (path) {
-        await supabase.storage.from('bebe-storage').remove([`uploads/${path}`])
+        await supabase.storage.from('items').remove([`uploads/${path}`])
       }
     }
 
