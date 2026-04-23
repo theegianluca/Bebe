@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 const SEED_CATEGORIES = [
   { name: 'ACT I — RENAISSANCE', slug: 'act-i',           sort_order: 1 },
   { name: 'ACT II — COWBOY CARTER', slug: 'act-ii',        sort_order: 2 },
