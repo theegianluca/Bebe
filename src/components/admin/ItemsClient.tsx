@@ -34,30 +34,54 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
     year: new Date().getFullYear(),
   })
 
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      if (file.size < 1024 * 1024) { resolve(file); return }
+
+      const img = new Image()
+      const url = URL.createObjectURL(file)
+      img.onload = () => {
+        URL.revokeObjectURL(url)
+        const MAX = 2000
+        let { width, height } = img
+        if (width > MAX || height > MAX) {
+          const ratio = Math.min(MAX / width, MAX / height)
+          width = Math.round(width * ratio)
+          height = Math.round(height * ratio)
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height)
+        canvas.toBlob(
+          (blob) => resolve(blob ? new File([blob], file.name, { type: 'image/jpeg' }) : file),
+          'image/jpeg', 0.85
+        )
+      }
+      img.src = url
+    })
+  }
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const raw = e.target.files?.[0]
+    if (!raw) return
 
     setIsUploading(true)
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Math.random()}.${fileExt}`
-    const filePath = `uploads/${fileName}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('items')
-      .upload(filePath, file)
+    const file = await compressImage(raw)
+    const form = new FormData()
+    form.append('file', file)
 
-    if (uploadError) {
-      alert('Error uploading image: ' + uploadError.message)
+    const res = await fetch('/api/upload', { method: 'POST', body: form })
+    const json = await res.json()
+
+    if (!res.ok) {
+      alert('Error uploading image: ' + (json.error ?? res.statusText))
       setIsUploading(false)
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('items')
-      .getPublicUrl(filePath)
-
-    setFormData({ ...formData, image_url: publicUrl })
+    setFormData({ ...formData, image_url: json.url })
     setIsUploading(false)
   }
 
