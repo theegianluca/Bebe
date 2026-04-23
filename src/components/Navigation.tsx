@@ -13,23 +13,23 @@ export function Navigation({ categories }: { categories: Category[] }) {
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         style={{
           position: 'fixed',
-          top: 'var(--space-6)',
-          right: 'var(--space-6)',
+          top: 'clamp(20px, 3vw, 36px)',
+          right: 'clamp(20px, 3vw, 36px)',
           zIndex: 100,
           padding: 'var(--space-2)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-end',
-          gap: '4px'
+          gap: '5px'
         }}
       >
-        <div style={{ width: '24px', height: '2px', backgroundColor: 'var(--text)' }} />
-        <div style={{ width: '24px', height: '2px', backgroundColor: 'var(--accent)' }} />
-        <div style={{ width: '16px', height: '2px', backgroundColor: 'var(--text)' }} />
+        <div style={{ width: '28px', height: '2px', backgroundColor: 'var(--text)' }} />
+        <div style={{ width: '28px', height: '2px', backgroundColor: 'var(--accent)' }} />
+        <div style={{ width: '18px', height: '2px', backgroundColor: 'var(--text)' }} />
       </button>
 
       {isOpen && (
@@ -40,71 +40,61 @@ export function Navigation({ categories }: { categories: Category[] }) {
           zIndex: 1000,
           display: 'flex',
           flexDirection: 'column',
-          padding: 'var(--space-16) var(--space-8)',
-          animation: 'fadeIn 0.3s ease-out'
+          padding: 'clamp(80px, 12vw, 160px) clamp(24px, 6vw, 100px)',
+          animation: 'fadeIn 0.25s ease-out',
+          overflowY: 'auto'
         }}>
-          <button 
+          <button
             onClick={() => setIsOpen(false)}
+            className="back-link"
             style={{
               position: 'absolute',
-              top: 'var(--space-6)',
-              right: 'var(--space-6)',
-              fontSize: 'var(--text-lg)',
-              color: 'var(--accent)'
+              top: 'clamp(20px, 3vw, 36px)',
+              right: 'clamp(20px, 3vw, 36px)',
+              color: 'var(--muted)'
             }}
           >
             [CLOSE]
           </button>
 
-          <div style={{ marginTop: 'var(--space-12)' }}>
-            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)', letterSpacing: '0.3em', marginBottom: 'var(--space-8)' }}>
-              CATEGORIES
-            </p>
-            <ul style={{ listStyle: 'none' }}>
-              {categories.map((cat, i) => (
-                <li 
-                  key={cat.id}
-                  style={{ 
-                    marginBottom: 'var(--space-4)',
-                    animation: `stagger 0.4s ease-out forwards`,
-                    animationDelay: `${i * 0.1}s`,
-                    opacity: 0
-                  }}
+          <a href="/" className="back-link" style={{ marginBottom: 'clamp(48px, 8vw, 100px)', width: 'fit-content' }}>
+            ← HOME
+          </a>
+
+          <p style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)', letterSpacing: '0.35em', marginBottom: 'clamp(24px, 4vw, 48px)', textTransform: 'uppercase' }}>
+            ERAS
+          </p>
+
+          <ul style={{ listStyle: 'none' }}>
+            {categories.map((cat, i) => (
+              <li
+                key={cat.id}
+                style={{
+                  animation: `stagger 0.4s ease-out forwards`,
+                  animationDelay: `${i * 0.07}s`,
+                  opacity: 0
+                }}
+              >
+                <a
+                  href={`/era/${cat.slug}`}
+                  className="era-nav-link"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <a 
-                    href={`/era/${cat.slug}`}
-                    style={{
-                      fontSize: 'var(--text-xl)',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      transition: 'color var(--transition)'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'}
-                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text)'}
-                  >
-                    {cat.name}
-                  </a>
-                </li>
-              ))}
-              <li style={{ 
-                marginTop: 'var(--space-12)',
-                animation: `stagger 0.4s ease-out forwards`,
-                animationDelay: `${categories.length * 0.1}s`,
-                opacity: 0
-              }}>
-                 <a 
-                    href="/admin"
-                    style={{
-                      fontSize: 'var(--text-sm)',
-                      color: 'var(--muted)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.2em'
-                    }}
-                  >
-                    Admin Access
-                  </a>
+                  {cat.name}
+                </a>
               </li>
-            </ul>
+            ))}
+          </ul>
+
+          <div style={{
+            marginTop: 'clamp(60px, 10vw, 120px)',
+            animation: `stagger 0.4s ease-out forwards`,
+            animationDelay: `${categories.length * 0.07}s`,
+            opacity: 0
+          }}>
+            <a href="/admin" className="glow-link" style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              ADMIN ACCESS
+            </a>
           </div>
         </nav>
       )}

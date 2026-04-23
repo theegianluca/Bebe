@@ -35,19 +35,32 @@ export default async function EraPage({ params }: Props) {
       <Navigation categories={categories ?? []} />
       <main style={{ minHeight: '100dvh' }}>
         <header style={{
-          padding: 'var(--space-20) var(--space-6) var(--space-12)',
+          padding: 'clamp(120px, 16vw, 220px) clamp(24px, 5vw, 80px) clamp(60px, 8vw, 100px)',
           borderBottom: '1px solid var(--border)',
         }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-            <p style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 'var(--space-3)' }}>
-              Era
+          <a href="/" className="back-link" style={{ marginBottom: 'clamp(32px, 5vw, 56px)', display: 'inline-flex' }}>
+            ← HOME
+          </a>
+          <p style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '16px' }}>
+            ERA
+          </p>
+          <h1 style={{
+            fontSize: 'var(--text-2xl)',
+            fontWeight: 700,
+            letterSpacing: '-0.03em',
+            lineHeight: 0.95,
+            textTransform: 'uppercase'
+          }}>
+            {category.name}
+          </h1>
+          {items && (
+            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)', letterSpacing: '0.2em', marginTop: '24px' }}>
+              {items.length} {items.length === 1 ? 'ITEM' : 'ITEMS'}
             </p>
-            <h1 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, letterSpacing: '0.04em' }}>
-              {category.name}
-            </h1>
-          </div>
+          )}
         </header>
-        <section style={{ padding: 'var(--space-12) var(--space-6)', maxWidth: '1400px', margin: '0 auto' }}>
+
+        <section style={{ padding: 'clamp(80px, 10vw, 160px) clamp(24px, 5vw, 80px)' }}>
           {items && items.length > 0 ? (
             <MasonryGallery items={items} />
           ) : (
