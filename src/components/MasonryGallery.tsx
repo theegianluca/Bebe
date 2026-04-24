@@ -38,6 +38,8 @@ export function MasonryGallery({ items }: { items: Item[] }) {
   const didDragRef = useRef(false)
   const zRef = useRef(10)
   const containerRef = useRef<HTMLDivElement>(null)
+  const scatteredRefsRef = useRef<Record<string, HTMLDivElement>>({})
+  const scrollOffsetRef = useRef(0)
 
   // Build display list with null gap entries at irregular intervals
   const displayList = useMemo<DisplayEntry[]>(() => {
@@ -96,7 +98,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
 
           setScattered(prev => {
             const without = prev.filter(s => s.id !== item.id)
-            return [...without, { id: item.id, image_url: item.image_url!, title: item.title, x: rect.left, y: rect.top, width, rotation, zIndex: z }]
+            return [...without, { id: item.id, image_url: item.image_url!, title: item.title, x: rect.left, y: rect.top + window.scrollY, width, rotation, zIndex: z }]
           })
         }
       }
@@ -110,7 +112,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
       if (activeScatteredIdRef.current) {
         const id = activeScatteredIdRef.current
         const { x: ox, y: oy } = offsetRef.current
-        setScattered(prev => prev.map(s => s.id === id ? { ...s, x: e.clientX - ox, y: e.clientY - oy } : s))
+        setScattered(prev => prev.map(s => s.id === id ? { ...s, x: e.clientX - ox, y: e.clientY - oy + window.scrollY } : s))
       }
     }
 
@@ -119,7 +121,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
       if (activeFromMasonryRef.current) {
         const { id, el } = activeFromMasonryRef.current
         const { x: ox, y: oy } = offsetRef.current
-        setScattered(prev => prev.map(s => s.id === id ? { ...s, x: e.clientX - ox, y: e.clientY - oy } : s))
+        setScattered(prev => prev.map(s => s.id === id ? { ...s, x: e.clientX - ox, y: e.clientY - oy + window.scrollY } : s))
         el.remove()
         activeFromMasonryRef.current = null
       }
@@ -130,6 +132,20 @@ export function MasonryGallery({ items }: { items: Item[] }) {
     window.addEventListener('mouseup', onUp)
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
   }, [])
+
+  useEffect(() => {
+    const onScroll = () => {
+      scrollOffsetRef.current = window.scrollY
+      scattered.forEach(s => {
+        const el = scatteredRefsRef.current[s.id]
+        if (el) {
+          el.style.top = `${s.y - window.scrollY}px`
+        }
+      })
+    }
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [scattered])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -259,12 +275,13 @@ export function MasonryGallery({ items }: { items: Item[] }) {
       {scattered.map(s => (
         <div
           key={s.id}
+          ref={el => { if (el) scatteredRefsRef.current[s.id] = el }}
           onMouseDown={e => handleScatterMouseDown(e, s)}
           onDoubleClick={() => removeScattered(s.id)}
           style={{
             position: 'fixed',
             left: s.x,
-            top: s.y,
+            top: s.y - window.scrollY,
             width: s.width,
             transform: `rotate(${s.rotation}deg)`,
             transformOrigin: 'center top',

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 
 interface Props {
@@ -11,21 +11,30 @@ interface Props {
 export function Hero({ frontImage, backImage }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const maskLayerRef = useRef<HTMLDivElement>(null)
+  const [lastMask, setLastMask] = useState<string | null>(null)
+  const fadeOutTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !maskLayerRef.current) return
+    if (fadeOutTimerRef.current) clearTimeout(fadeOutTimerRef.current)
     const rect = containerRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const mask = `radial-gradient(ellipse 240px 220px at ${x}px ${y}px, transparent 0%, transparent 30%, rgba(0,0,0,0.2) 50%, black 70%)`
+    const mask = `radial-gradient(ellipse 90px 80px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.7) 65%, black 85%)`
     maskLayerRef.current.style.setProperty('-webkit-mask-image', mask)
     maskLayerRef.current.style.setProperty('mask-image', mask)
+    setLastMask(mask)
   }
 
   const handleMouseLeave = () => {
     if (!maskLayerRef.current) return
-    maskLayerRef.current.style.setProperty('-webkit-mask-image', 'none')
-    maskLayerRef.current.style.setProperty('mask-image', 'none')
+    fadeOutTimerRef.current = setTimeout(() => {
+      if (maskLayerRef.current) {
+        maskLayerRef.current.style.setProperty('-webkit-mask-image', 'none')
+        maskLayerRef.current.style.setProperty('mask-image', 'none')
+      }
+      setLastMask(null)
+    }, 2500)
   }
 
   const hasBothImages = !!(frontImage && backImage)
@@ -49,7 +58,7 @@ export function Hero({ frontImage, backImage }: Props) {
         style={{
           position: 'absolute',
           inset: 0,
-          cursor: hasBothImages ? 'crosshair' : 'default',
+          cursor: hasBothImages ? 'pointer' : 'default',
           overflow: 'hidden'
         }}
       >
