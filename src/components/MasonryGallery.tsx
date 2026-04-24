@@ -82,7 +82,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
           offsetRef.current = { x: ox, y: oy }
           const z = ++zRef.current
 
-          setLiftedIds(prev => new Set([...prev, item.id]))
+          setLiftedIds(prev => { const next = new Set(prev); next.add(item.id); return next })
 
           const el = document.createElement('div')
           el.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${width}px;transform:rotate(${rotation}deg);transform-origin:center top;z-index:${z};pointer-events:none;user-select:none;filter:drop-shadow(0 16px 48px rgba(0,0,0,0.9)) drop-shadow(0 0 1px rgba(255,255,255,0.08));`
