@@ -24,7 +24,8 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user || user.email !== 'gianlucaraddatz@icloud.com') {
+    const adminEmail = process.env.ADMIN_EMAIL
+    if (!user || (adminEmail && user.email !== adminEmail)) {
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       return NextResponse.redirect(url)

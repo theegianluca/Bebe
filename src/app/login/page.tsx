@@ -33,7 +33,7 @@ export default function LoginPage() {
       <div style={{ width: '100%', maxWidth: '360px' }}>
         <div style={{ marginBottom: 'var(--space-8)' }}>
           <span style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Admin</span>
-          <h1 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, marginTop: 'var(--space-2)' }}>BEBE</h1>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 6vw, 5rem)', letterSpacing: '0.04em', marginTop: 'var(--space-2)', lineHeight: 1 }}>TBFP</h1>
           <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-1)' }}>Sign in to manage the archive</p>
         </div>
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>

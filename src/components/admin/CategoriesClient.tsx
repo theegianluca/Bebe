@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   DndContext,
@@ -113,12 +114,12 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
     }
   }
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: FormEvent) => {
     e.preventDefault()
     if (!newName || !newSlug) return
 
     if (isEditing) {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('categories')
         .update({ name: newName, slug: newSlug })
         .eq('id', isEditing.id)
@@ -132,7 +133,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
         setNewSlug('')
       }
     } else {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('categories')
         .insert([{ name: newName, slug: newSlug, sort_order: categories.length + 1 }])
         .select()
@@ -161,7 +162,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: Cat
       <form onSubmit={handleSave} style={{ 
         marginBottom: 'var(--space-8)', 
         padding: 'var(--space-4)', 
-        border: '1px solid var(--accent)',
+        border: '1px solid var(--border)',
         display: 'flex',
         gap: 'var(--space-4)',
         alignItems: 'flex-end'

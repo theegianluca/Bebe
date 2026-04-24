@@ -15,6 +15,7 @@ export function Navigation({ categories }: { categories: Category[] }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="Open navigation"
         style={{
           position: 'fixed',
           top: 'clamp(20px, 3vw, 36px)',
@@ -27,41 +28,36 @@ export function Navigation({ categories }: { categories: Category[] }) {
           gap: '5px'
         }}
       >
-        <div style={{ width: '28px', height: '2px', backgroundColor: 'var(--text)' }} />
-        <div style={{ width: '28px', height: '2px', backgroundColor: 'var(--accent)' }} />
-        <div style={{ width: '18px', height: '2px', backgroundColor: 'var(--text)' }} />
+        <div style={{ width: '28px', height: '1.5px', backgroundColor: 'var(--text)' }} />
+        <div style={{ width: '28px', height: '1.5px', backgroundColor: 'rgba(255,255,255,0.45)' }} />
+        <div style={{ width: '16px', height: '1.5px', backgroundColor: 'var(--text)' }} />
       </button>
 
       {isOpen && (
         <nav style={{
           position: 'fixed',
           inset: 0,
-          backgroundColor: '#000000',
+          backgroundColor: 'rgba(12,0,0,0.97)',
           zIndex: 1000,
           display: 'flex',
           flexDirection: 'column',
-          padding: 'clamp(80px, 12vw, 160px) clamp(24px, 6vw, 100px)',
-          animation: 'fadeIn 0.25s ease-out',
+          padding: 'clamp(80px, 12vw, 160px) clamp(32px, 7vw, 120px)',
+          animation: 'fadeIn 0.3s ease-out',
           overflowY: 'auto'
         }}>
           <button
             onClick={() => setIsOpen(false)}
             className="back-link"
-            style={{
-              position: 'absolute',
-              top: 'clamp(20px, 3vw, 36px)',
-              right: 'clamp(20px, 3vw, 36px)',
-              color: 'var(--muted)'
-            }}
+            style={{ position: 'absolute', top: 'clamp(24px, 3.5vw, 40px)', right: 'clamp(24px, 3.5vw, 40px)', color: 'var(--muted)' }}
           >
             [CLOSE]
           </button>
 
-          <a href="/" className="back-link" style={{ marginBottom: 'clamp(48px, 8vw, 100px)', width: 'fit-content' }}>
+          <a href="/" className="back-link" style={{ marginBottom: 'clamp(56px, 9vw, 120px)', width: 'fit-content', color: 'var(--muted)' }}>
             ← HOME
           </a>
 
-          <p style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)', letterSpacing: '0.35em', marginBottom: 'clamp(24px, 4vw, 48px)', textTransform: 'uppercase' }}>
+          <p style={{ color: 'rgba(255,255,255,0.22)', fontSize: '9px', letterSpacing: '0.45em', marginBottom: 'clamp(20px, 3vw, 40px)', textTransform: 'uppercase' }}>
             ERAS
           </p>
 
@@ -70,8 +66,8 @@ export function Navigation({ categories }: { categories: Category[] }) {
               <li
                 key={cat.id}
                 style={{
-                  animation: `stagger 0.4s ease-out forwards`,
-                  animationDelay: `${i * 0.07}s`,
+                  animation: 'stagger 0.45s ease-out forwards',
+                  animationDelay: `${i * 0.06}s`,
                   opacity: 0
                 }}
               >
@@ -87,9 +83,9 @@ export function Navigation({ categories }: { categories: Category[] }) {
           </ul>
 
           <div style={{
-            marginTop: 'clamp(60px, 10vw, 120px)',
-            animation: `stagger 0.4s ease-out forwards`,
-            animationDelay: `${categories.length * 0.07}s`,
+            marginTop: 'clamp(60px, 10vw, 130px)',
+            animation: 'stagger 0.45s ease-out forwards',
+            animationDelay: `${categories.length * 0.06}s`,
             opacity: 0
           }}>
             <a href="/admin" className="glow-link" style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>

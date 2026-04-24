@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { createClient, createStaticClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Navigation } from '@/components/Navigation'
@@ -34,39 +35,60 @@ export default async function EraPage({ params }: Props) {
     <>
       <Navigation categories={categories ?? []} />
       <main style={{ minHeight: '100dvh' }}>
+
         <header style={{
-          padding: 'clamp(120px, 16vw, 220px) clamp(24px, 5vw, 80px) clamp(60px, 8vw, 100px)',
-          borderBottom: '1px solid var(--border)',
+          padding: 'clamp(140px, 18vw, 260px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 140px)',
         }}>
-          <a href="/" className="back-link" style={{ marginBottom: 'clamp(32px, 5vw, 56px)', display: 'inline-flex' }}>
+          <a href="/" className="back-link reveal" style={{ marginBottom: 'clamp(48px, 7vw, 90px)', display: 'inline-flex', color: 'var(--muted)' }}>
             ← HOME
           </a>
-          <p style={{ color: 'var(--accent)', fontSize: 'var(--text-xs)', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '16px' }}>
-            ERA
-          </p>
-          <h1 style={{
-            fontSize: 'var(--text-2xl)',
-            fontWeight: 700,
-            letterSpacing: '-0.03em',
-            lineHeight: 0.95,
-            textTransform: 'uppercase'
-          }}>
-            {category.name}
-          </h1>
+
+          <div className="reveal" style={{ '--reveal-delay': '0.1s' } as CSSProperties}>
+            <p style={{
+              fontSize: '8px',
+              color: 'rgba(255,255,255,0.28)',
+              letterSpacing: '0.5em',
+              textTransform: 'uppercase',
+              marginBottom: 'clamp(16px, 2.5vw, 32px)'
+            }}>
+              ERA
+            </p>
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-2xl)',
+              letterSpacing: '0.02em',
+              lineHeight: 0.88,
+              textTransform: 'uppercase'
+            }}>
+              {category.name}
+            </h1>
+          </div>
+
           {items && (
-            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)', letterSpacing: '0.2em', marginTop: '24px' }}>
+            <p
+              className="reveal"
+              style={{
+                '--reveal-delay': '0.22s',
+                color: 'rgba(255,255,255,0.22)',
+                fontSize: '9px',
+                letterSpacing: '0.3em',
+                marginTop: 'clamp(28px, 4vw, 56px)',
+                textTransform: 'uppercase'
+              } as CSSProperties}
+            >
               {items.length} {items.length === 1 ? 'ITEM' : 'ITEMS'}
             </p>
           )}
         </header>
 
-        <section style={{ padding: 'clamp(80px, 10vw, 160px) clamp(24px, 5vw, 80px)' }}>
+        <section style={{ padding: '0 clamp(32px, 6vw, 100px) clamp(80px, 10vw, 160px)' }}>
           {items && items.length > 0 ? (
             <MasonryGallery items={items} />
           ) : (
             <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>No items yet in this era.</p>
           )}
         </section>
+
       </main>
       <Footer />
     </>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
+import type { FormEvent, DragEvent } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   DndContext,
@@ -80,7 +81,7 @@ function SortableCard({ item, categories, onDelete }: {
       </div>
 
       {item.type === 'image' ? (
-        <img src={item.image_url} style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
+        <img src={item.image_url} alt={item.title || ''} style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
       ) : (
         <div style={{ height: '160px', overflow: 'hidden', fontSize: '10px', background: 'var(--surface)', padding: '12px', lineHeight: 1.6, color: 'var(--muted)' }}>
           {item.content}
@@ -128,12 +129,16 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
     const { active, over } = event
     if (!over || active.id === over.id) return
     setItems(prev => {
-      const oldIdx = prev.findIndex(i => i.id === active.id)
-      const newIdx = prev.findIndex(i => i.id === over.id)
-      const next = arrayMove(prev, oldIdx, newIdx)
-      const updates = next.map((item, idx) => ({ id: item.id, category_id: item.category_id, type: item.type, sort_order: idx + 1 }))
+      const scope = filterCat === 'all' ? prev : prev.filter(i => i.category_id === filterCat)
+      const oldIdx = scope.findIndex(i => i.id === active.id)
+      const newIdx = scope.findIndex(i => i.id === over.id)
+      if (oldIdx === -1 || newIdx === -1) return prev
+      const reordered = arrayMove(scope, oldIdx, newIdx)
+      const updates = reordered.map((item, idx) => ({ id: item.id, category_id: item.category_id, type: item.type, sort_order: idx + 1 }))
       supabase.from('items').upsert(updates).then(({ error }) => { if (error) console.error(error) })
-      return next
+      if (filterCat === 'all') return reordered
+      let ri = 0
+      return prev.map(item => item.category_id === filterCat ? reordered[ri++] : item)
     })
   }
 
@@ -152,7 +157,9 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
       }
       const canvas = document.createElement('canvas')
       canvas.width = width; canvas.height = height
-      canvas.getContext('2d')!.drawImage(img, 0, 0, width, height)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) { resolve(file); return }
+      ctx.drawImage(img, 0, 0, width, height)
       canvas.toBlob(blob => resolve(blob ? new File([blob], file.name, { type: 'image/jpeg' }) : file), 'image/jpeg', 0.85)
     }
     img.src = url
@@ -186,7 +193,7 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
   }
 
   /* ─── Drop zone handlers ─── */
-  const onDrop = (e: React.DragEvent) => {
+  const onDrop = (e: DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
     addFilesToQueue(e.dataTransfer.files)
@@ -228,14 +235,14 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
         sort_order: baseOrder + idx + 1
       }))
       const { data } = await supabase.from('items').insert(inserts).select()
-      if (data) setItems(prev => [...data, ...prev])
+      if (data) setItems(prev => [...prev, ...data])
     }
 
     setIsUploading(false)
   }
 
   /* ─── Add text block ─── */
-  const handleTextSubmit = async (e: React.FormEvent) => {
+  const handleTextSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!textForm.category_id || !textForm.content) return
     const { data } = await supabase.from('items').insert([{
@@ -248,7 +255,7 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
       sort_order: items.filter(i => i.category_id === textForm.category_id).length + 1
     }]).select().single()
     if (data) {
-      setItems(prev => [data, ...prev])
+      setItems(prev => [...prev, data])
       setTextForm(f => ({ ...f, title: '', content: '', source: '' }))
     }
   }
@@ -257,8 +264,9 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
   const handleDelete = async (item: Item) => {
     if (!confirm('Delete this item?')) return
     if (item.image_url) {
-      const path = item.image_url.split('/').pop()
-      if (path) await supabase.storage.from('items').remove([`uploads/${path}`])
+      const parts = item.image_url.split('/storage/v1/object/public/items/')
+      const storagePath = parts[1]
+      if (storagePath) await supabase.storage.from('items').remove([storagePath])
     }
     const { error } = await supabase.from('items').delete().eq('id', item.id)
     if (!error) setItems(prev => prev.filter(i => i.id !== item.id))
@@ -344,7 +352,7 @@ export function ItemsClient({ initialItems, categories }: { initialItems: Item[]
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px' }}>
                 {queue.map(q => (
                   <div key={q.id} style={{ position: 'relative', aspectRatio: '1', overflow: 'hidden', border: `1px solid ${q.status === 'error' ? 'var(--accent)' : q.status === 'done' ? '#22c55e' : 'var(--border)'}` }}>
-                    <img src={q.preview} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    <img src={q.preview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                     {/* Status overlay */}
                     {q.status === 'uploading' && (
                       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--accent)' }}>

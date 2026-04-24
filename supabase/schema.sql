@@ -39,3 +39,20 @@ create policy "Auth write items"
   on public.items for all
   using (auth.role() = 'authenticated')
   with check (auth.role() = 'authenticated');
+
+-- Settings table (hero images, intro images)
+create table if not exists public.settings (
+  key         text primary key,
+  value       text,
+  updated_at  timestamptz default now()
+);
+
+alter table public.settings enable row level security;
+
+create policy "Public read settings"
+  on public.settings for select using (true);
+
+create policy "Auth write settings"
+  on public.settings for all
+  using (auth.role() = 'authenticated')
+  with check (auth.role() = 'authenticated');
