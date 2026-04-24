@@ -18,14 +18,14 @@ export function Hero({ frontImage, backImage }: Props) {
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     const mask = `radial-gradient(ellipse 240px 220px at ${x}px ${y}px, transparent 0%, transparent 30%, rgba(0,0,0,0.2) 50%, black 70%)`
-    maskLayerRef.current.style.WebkitMaskImage = mask
-    maskLayerRef.current.style.maskImage = mask
+    maskLayerRef.current.style.setProperty('-webkit-mask-image', mask)
+    maskLayerRef.current.style.setProperty('mask-image', mask)
   }
 
   const handleMouseLeave = () => {
     if (!maskLayerRef.current) return
-    maskLayerRef.current.style.WebkitMaskImage = 'none'
-    maskLayerRef.current.style.maskImage = 'none'
+    maskLayerRef.current.style.setProperty('-webkit-mask-image', 'none')
+    maskLayerRef.current.style.setProperty('mask-image', 'none')
   }
 
   const hasBothImages = !!(frontImage && backImage)
@@ -67,7 +67,7 @@ export function Hero({ frontImage, backImage }: Props) {
         {frontImage && (
           <div
             ref={maskLayerRef}
-            style={{ position: 'absolute', inset: 0, WebkitMaskImage: 'none', maskImage: 'none' }}
+            style={{ position: 'absolute', inset: 0 }}
           >
             <img
               src={frontImage} alt=""
