@@ -55,7 +55,7 @@ export default async function Home() {
                 style={{ '--reveal-delay': `${i * 0.07}s` } as CSSProperties}
               >
                 <span style={{
-                  fontFamily: 'var(--font-display)',
+                  fontFamily: 'var(--font)',
                   fontSize: 'clamp(1.2rem, 2vw, 2.2rem)',
                   color: 'rgba(255,255,255,0.22)',
                   letterSpacing: '0.06em'

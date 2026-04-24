@@ -54,7 +54,7 @@ export default async function EraPage({ params }: Props) {
               ERA
             </p>
             <h1 style={{
-              fontFamily: 'var(--font-display)',
+              fontFamily: 'var(--font)',
               fontSize: 'var(--text-2xl)',
               letterSpacing: '0.02em',
               lineHeight: 0.88,

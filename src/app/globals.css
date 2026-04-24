@@ -6,7 +6,6 @@
   --surface: rgba(0,0,0,0.22);
   --border:  rgba(255,255,255,0.11);
   --font: 'Roboto Mono', 'Courier New', monospace;
-  --font-display: 'Bebas Neue', 'Impact', sans-serif;
 
   --text-xs:   clamp(0.6rem,  0.55rem + 0.25vw, 0.75rem);
   --text-sm:   clamp(0.75rem, 0.7rem  + 0.25vw, 0.875rem);
@@ -138,7 +137,7 @@ input, textarea, select { font: inherit; color: inherit; }
 
 /* ─── ERA NAV LINK (full-screen overlay nav) ─── */
 .era-nav-link {
-  font-family: var(--font-display), 'Impact', sans-serif;
+  font-family: var(--font);
   font-size: clamp(3.5rem, 8vw, 11rem);
   letter-spacing: 0.03em;
   line-height: 0.88;
@@ -170,7 +169,7 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .era-row:hover .era-row__arrow { color: var(--text); transform: translateX(6px); }
 .era-row__name {
-  font-family: var(--font-display), 'Impact', sans-serif;
+  font-family: var(--font);
   font-size: clamp(2.8rem, 6vw, 9rem);
   letter-spacing: 0.01em;
   line-height: 0.9;

@@ -17,7 +17,7 @@ export function Footer() {
 
         <div>
           <h3 style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font)',
             fontSize: 'clamp(4rem, 8vw, 10rem)',
             letterSpacing: '0.04em',
             lineHeight: 0.85,

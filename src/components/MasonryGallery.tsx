@@ -217,7 +217,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
                   />
                   <div className="gallery-overlay">
                     {item.title && (
-                      <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1rem, 1.8vw, 1.6rem)', letterSpacing: '0.06em', marginBottom: '6px' }}>
+                      <p style={{ fontFamily: 'var(--font)', fontSize: 'clamp(1rem, 1.8vw, 1.6rem)', letterSpacing: '0.06em', marginBottom: '6px' }}>
                         {item.title}
                       </p>
                     )}
@@ -230,7 +230,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
                 <div style={{ padding: 'clamp(16px, 3vw, 32px) 0' }}>
                   {item.title && (
                     <h3 style={{
-                      fontFamily: 'var(--font-display)',
+                      fontFamily: 'var(--font)',
                       fontSize: 'clamp(1.4rem, 3vw, 3rem)',
                       letterSpacing: '0.04em',
                       color: 'var(--text)',
@@ -306,7 +306,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
             ) : (
               <div style={{ padding: 'clamp(40px, 6vw, 80px)', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', maxWidth: '680px' }}>
                 {selectedItem.title && (
-                  <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '0.04em', marginBottom: '28px' }}>
+                  <h2 style={{ fontFamily: 'var(--font)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '0.04em', marginBottom: '28px' }}>
                     {selectedItem.title}
                   </h2>
                 )}
@@ -315,7 +315,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
             )}
             <div style={{ marginTop: '20px', display: 'flex', gap: '16px', alignItems: 'baseline' }}>
               {selectedItem.title && (
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(0.9rem, 1.5vw, 1.4rem)', letterSpacing: '0.06em' }}>{selectedItem.title}</p>
+                <p style={{ fontFamily: 'var(--font)', fontSize: 'clamp(0.9rem, 1.5vw, 1.4rem)', letterSpacing: '0.06em' }}>{selectedItem.title}</p>
               )}
               <p style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.12em' }}>
                 {selectedItem.source}{selectedItem.year ? ` (${selectedItem.year})` : ''}

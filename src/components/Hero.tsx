@@ -34,24 +34,21 @@ export function Hero({ frontImage, backImage }: Props) {
     <section style={{
       minHeight: '100vh',
       width: '100%',
-      display: 'grid',
-      gridTemplateColumns: '1fr auto',
-      alignItems: 'center',
       position: 'relative',
       overflow: 'hidden',
-      padding: 'clamp(100px, 12vw, 160px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 130px)'
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
 
-      {/* ─── Image pair ─── */}
+      {/* ─── Image pair (fullscreen background) ─── */}
       <div
         ref={containerRef}
         onMouseMove={hasBothImages ? handleMouseMove : undefined}
         onMouseLeave={hasBothImages ? handleMouseLeave : undefined}
         style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: 'clamp(300px, 46vw, 680px)',
-          aspectRatio: '3 / 4',
+          position: 'absolute',
+          inset: 0,
           cursor: hasBothImages ? 'crosshair' : 'default',
           overflow: 'hidden'
         }}
@@ -90,15 +87,15 @@ export function Hero({ frontImage, backImage }: Props) {
         )}
       </div>
 
-      {/* ─── Text column ─── */}
-      <div style={{ paddingLeft: 'clamp(28px, 5vw, 80px)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'clamp(24px, 4vw, 56px)' }}>
+      {/* ─── Text column (overlay on images) ─── */}
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'clamp(24px, 4vw, 56px)', padding: 'clamp(100px, 12vw, 160px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 130px)' }}>
 
         <div>
           <p style={{ fontSize: '8px', color: 'var(--muted)', letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: '20px' }}>
             ARCHIVE
           </p>
           <h1 style={{
-            fontFamily: 'var(--font-display)',
+            fontFamily: 'var(--font)',
             fontSize: 'var(--text-hero)',
             letterSpacing: '0.04em',
             lineHeight: 0.82,
@@ -125,9 +122,9 @@ export function Hero({ frontImage, backImage }: Props) {
       </div>
 
       {/* Bottom label */}
-      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', left: 'clamp(32px, 6vw, 100px)' }}>
+      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', left: 'clamp(32px, 6vw, 100px)', zIndex: 10 }}>
         <p style={{
-          fontFamily: 'var(--font-display)',
+          fontFamily: 'var(--font)',
           fontSize: 'clamp(0.8rem, 1.4vw, 1.4rem)',
           letterSpacing: '0.22em',
           color: 'var(--muted)',
@@ -138,7 +135,7 @@ export function Hero({ frontImage, backImage }: Props) {
       </div>
 
       {/* Scroll cue */}
-      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', right: 'clamp(32px, 6vw, 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.3 }}>
+      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', right: 'clamp(32px, 6vw, 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.3, zIndex: 10 }}>
         <div style={{ width: '1px', height: 'clamp(40px, 6vw, 80px)', background: 'linear-gradient(to bottom, transparent, var(--text))', animation: 'slideUp 1.8s ease infinite' }} />
       </div>
     </section>
