@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useCallback } from 'react'
 import type { MouseEvent } from 'react'
 
 interface Props {
@@ -11,30 +11,65 @@ interface Props {
 export function Hero({ frontImage, backImage }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const maskLayerRef = useRef<HTMLDivElement>(null)
-  const [lastMask, setLastMask] = useState<string | null>(null)
-  const fadeOutTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const fadeTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const rafRef = useRef<number | null>(null)
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current || !maskLayerRef.current) return
-    if (fadeOutTimerRef.current) clearTimeout(fadeOutTimerRef.current)
-    const rect = containerRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const mask = `radial-gradient(ellipse 90px 80px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.7) 65%, black 85%)`
+  const currentRadius = useRef(0)
+  const targetRadius = useRef(0)
+  const posRef = useRef({ x: 0, y: 0 })
+
+  const applyMask = useCallback(() => {
+    if (!maskLayerRef.current) return
+    const { x, y } = posRef.current
+    const r = currentRadius.current
+    const mask = `radial-gradient(circle ${r}px at ${x}px ${y}px, black 0%, black 45%, transparent 100%)`
     maskLayerRef.current.style.setProperty('-webkit-mask-image', mask)
     maskLayerRef.current.style.setProperty('mask-image', mask)
-    setLastMask(mask)
+  }, [])
+
+  const animateRadius = useCallback(() => {
+    const diff = targetRadius.current - currentRadius.current
+    currentRadius.current += diff * 0.12
+
+    applyMask()
+
+    if (Math.abs(diff) > 0.5) {
+      rafRef.current = requestAnimationFrame(animateRadius)
+    } else {
+      currentRadius.current = targetRadius.current
+      applyMask()
+    }
+  }, [applyMask])
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current)
+
+    const rect = containerRef.current.getBoundingClientRect()
+    posRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    }
+    targetRadius.current = 160
+
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(animateRadius)
+
+    // Nach kurzer Bewegungspause wieder schließen
+    fadeTimerRef.current = setTimeout(() => {
+      targetRadius.current = 0
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(animateRadius)
+    }, 300)
   }
 
   const handleMouseLeave = () => {
-    if (!maskLayerRef.current) return
-    fadeOutTimerRef.current = setTimeout(() => {
-      if (maskLayerRef.current) {
-        maskLayerRef.current.style.setProperty('-webkit-mask-image', 'none')
-        maskLayerRef.current.style.setProperty('mask-image', 'none')
-      }
-      setLastMask(null)
-    }, 2500)
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current)
+    fadeTimerRef.current = setTimeout(() => {
+      targetRadius.current = 0
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(animateRadius)
+    }, 120)
   }
 
   const hasBothImages = !!(frontImage && backImage)
@@ -58,7 +93,7 @@ export function Hero({ frontImage, backImage }: Props) {
         style={{
           position: 'absolute',
           inset: 0,
-          cursor: hasBothImages ? 'pointer' : 'default',
+          cursor: hasBothImages ? 'none' : 'default',
           overflow: 'hidden'
         }}
       >
@@ -73,7 +108,12 @@ export function Hero({ frontImage, backImage }: Props) {
         {frontImage && (
           <div
             ref={maskLayerRef}
-            style={{ position: 'absolute', inset: 0 }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              WebkitMaskImage: 'radial-gradient(circle 0px at 50% 50%, black 0%, transparent 100%)',
+              maskImage: 'radial-gradient(circle 0px at 50% 50%, black 0%, transparent 100%)',
+            }}
           >
             <img
               src={frontImage} alt=""
