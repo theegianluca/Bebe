@@ -29,11 +29,11 @@ export function Hero({ frontImage, backImage }: Props) {
 
   const animateRadius = useCallback(() => {
     const diff = targetRadius.current - currentRadius.current
-    currentRadius.current += diff * 0.12
+    currentRadius.current += diff * 0.09
 
     applyMask()
 
-    if (Math.abs(diff) > 0.5) {
+    if (Math.abs(diff) > 0.3) {
       rafRef.current = requestAnimationFrame(animateRadius)
     } else {
       currentRadius.current = targetRadius.current
@@ -50,17 +50,16 @@ export function Hero({ frontImage, backImage }: Props) {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     }
-    targetRadius.current = 160
+    targetRadius.current = 180
 
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(animateRadius)
 
-    // Nach kurzer Bewegungspause wieder schließen
     fadeTimerRef.current = setTimeout(() => {
       targetRadius.current = 0
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = requestAnimationFrame(animateRadius)
-    }, 300)
+    }, 400)
   }
 
   const handleMouseLeave = () => {
@@ -69,7 +68,7 @@ export function Hero({ frontImage, backImage }: Props) {
       targetRadius.current = 0
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
       rafRef.current = requestAnimationFrame(animateRadius)
-    }, 120)
+    }, 180)
   }
 
   const hasBothImages = !!(frontImage && backImage)
@@ -124,27 +123,61 @@ export function Hero({ frontImage, backImage }: Props) {
         )}
 
         {!frontImage && !backImage && (
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.2em' }}>ADD IMAGES IN ADMIN → SETTINGS</span>
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundColor: 'var(--surface)',
+            border: '1px solid var(--border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-text)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--muted)',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase'
+            }}>
+              ADD IMAGES IN ADMIN → SETTINGS
+            </span>
           </div>
         )}
 
         {hasBothImages && (
-          <div style={{ position: 'absolute', bottom: '20px', right: '20px', fontSize: '8px', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.18em', textTransform: 'uppercase', pointerEvents: 'none' }}>
+          <div style={{
+            position: 'absolute', bottom: '24px', right: '24px',
+            fontFamily: 'var(--font-text)',
+            fontSize: 'var(--text-xs)',
+            color: 'rgba(255,255,255,0.28)',
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            pointerEvents: 'none'
+          }}>
             HOVER TO REVEAL
           </div>
         )}
       </div>
 
       {/* ─── Text column (overlay on images) ─── */}
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 'clamp(24px, 4vw, 56px)', padding: 'clamp(100px, 12vw, 160px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 130px)' }}>
-
+      <div style={{
+        position: 'relative', zIndex: 10,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: 'clamp(24px, 4vw, 56px)',
+        padding: 'clamp(100px, 12vw, 160px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 130px)'
+      }}>
         <div>
-          <p style={{ fontSize: '8px', color: 'var(--muted)', letterSpacing: '0.45em', textTransform: 'uppercase', marginBottom: '20px' }}>
+          <p style={{
+            fontFamily: 'var(--font-text)',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--muted)',
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            marginBottom: '20px'
+          }}>
             ARCHIVE
           </p>
           <h1 style={{
             fontFamily: 'var(--font)',
+            fontWeight: 700,
             fontSize: 'var(--text-hero)',
             letterSpacing: '0.04em',
             lineHeight: 0.82,
@@ -155,26 +188,18 @@ export function Hero({ frontImage, backImage }: Props) {
             TBFP
           </h1>
         </div>
-
-        {/* Vinyl */}
-        <div style={{ width: 'clamp(52px, 7vw, 90px)', height: 'clamp(52px, 7vw, 90px)', opacity: 0.55 }}>
-          <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%', animation: 'spin 14s linear infinite' }}>
-            <circle cx="50" cy="50" r="47" fill="none" stroke="var(--muted)" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="37" fill="none" stroke="var(--muted)" strokeWidth="0.2" />
-            <circle cx="50" cy="50" r="27" fill="none" stroke="var(--muted)" strokeWidth="0.2" />
-            <circle cx="50" cy="50" r="17" fill="none" stroke="var(--muted)" strokeWidth="0.2" />
-            <circle cx="50" cy="50" r="47" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.7" strokeDasharray="1 9" />
-            <circle cx="50" cy="50" r="5" fill="rgba(255,255,255,0.7)" />
-            <circle cx="50" cy="50" r="1.5" fill="var(--bg)" />
-          </svg>
-        </div>
       </div>
 
       {/* Bottom label */}
-      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', left: 'clamp(32px, 6vw, 100px)', zIndex: 10 }}>
+      <div style={{
+        position: 'absolute',
+        bottom: 'clamp(28px, 4vw, 52px)',
+        left: 'clamp(32px, 6vw, 100px)',
+        zIndex: 10
+      }}>
         <p style={{
-          fontFamily: 'var(--font)',
-          fontSize: 'clamp(0.8rem, 1.4vw, 1.4rem)',
+          fontFamily: 'var(--font-text)',
+          fontSize: 'clamp(0.75rem, 1.2vw, 1.1rem)',
           letterSpacing: '0.22em',
           color: 'var(--muted)',
           textTransform: 'uppercase'
@@ -184,8 +209,27 @@ export function Hero({ frontImage, backImage }: Props) {
       </div>
 
       {/* Scroll cue */}
-      <div style={{ position: 'absolute', bottom: 'clamp(28px, 4vw, 52px)', right: 'clamp(32px, 6vw, 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.3, zIndex: 10 }}>
-        <div style={{ width: '1px', height: 'clamp(40px, 6vw, 80px)', background: 'linear-gradient(to bottom, transparent, var(--text))', animation: 'slideUp 1.8s ease infinite' }} />
+      <div style={{
+        position: 'absolute',
+        bottom: 'clamp(28px, 4vw, 52px)',
+        right: 'clamp(32px, 6vw, 100px)',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', gap: '10px',
+        opacity: 0.45, zIndex: 10
+      }}>
+        <p style={{
+          fontFamily: 'var(--font-text)',
+          fontSize: 'var(--text-xs)',
+          letterSpacing: '0.22em',
+          color: 'var(--muted)',
+          textTransform: 'uppercase'
+        }}>SCROLL</p>
+        <div style={{
+          width: '1px',
+          height: 'clamp(40px, 6vw, 80px)',
+          background: 'linear-gradient(to bottom, var(--text), transparent)',
+          animation: 'slideUp 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite'
+        }} />
       </div>
     </section>
   )
