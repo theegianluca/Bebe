@@ -65,7 +65,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
 
   // Masonry drag — lift original, float DOM element
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e: globalThis.MouseEvent) => {
       if (pendingRef.current) {
         const { item, rect, startX, startY } = pendingRef.current
         const dx = e.clientX - startX
@@ -114,7 +114,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
       }
     }
 
-    const onUp = (e: MouseEvent) => {
+    const onUp = (e: globalThis.MouseEvent) => {
       pendingRef.current = null
       if (activeFromMasonryRef.current) {
         const { id, el } = activeFromMasonryRef.current
