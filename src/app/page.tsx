@@ -4,6 +4,7 @@ import { createStaticClient } from '@/lib/supabase/server'
 import { Hero } from '@/components/Hero'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
+import { Marquee } from '@/components/Marquee'
 
 export const revalidate = 60
 
@@ -32,22 +33,33 @@ export default async function Home() {
       <main>
         <Hero frontImage={heroFront} backImage={heroBack} />
 
+        <Marquee />
+
         <section style={{ padding: 'clamp(100px, 14vw, 200px) clamp(32px, 6vw, 100px)' }}>
-          <p
-            className="reveal"
-            style={{
-              color: 'rgba(255,255,255,0.25)',
-              fontSize: '8px',
-              letterSpacing: '0.45em',
+          <div className="reveal" style={{ marginBottom: 'clamp(60px, 8vw, 120px)' }}>
+            <span style={{
+              display: 'block',
+              fontSize: 'clamp(6rem, 12vw, 16rem)',
+              color: 'var(--text)',
+              lineHeight: 0.85,
+              marginBottom: '0.3em',
+            }}>★</span>
+            <p style={{
+              fontFamily: 'var(--font-text)',
+              fontSize: 'clamp(1.2rem, 3vw, 2rem)',
+              color: 'rgba(255,150,150,0.9)',
+              letterSpacing: '0.2em',
               textTransform: 'uppercase',
-              marginBottom: 'clamp(60px, 8vw, 120px)'
-            }}
-          >
-            Select an era to explore
-          </p>
+            }}>
+              Select an era to explore
+            </p>
+          </div>
 
           <div>
-            {(categories ?? []).map((cat, i) => (
+            {(categories ?? []).map((cat, i) => {
+              const total = categories?.length ?? 0
+              const reverseNum = total - i
+              return (
               <a
                 key={cat.id}
                 href={`/era/${cat.slug}`}
@@ -56,18 +68,20 @@ export default async function Home() {
               >
                 <span style={{
                   fontFamily: 'var(--font)',
-                  fontSize: 'clamp(1.2rem, 2vw, 2.2rem)',
-                  color: 'rgba(255,255,255,0.22)',
-                  letterSpacing: '0.06em'
+                  fontWeight: 700,
+                  fontSize: 'clamp(2.8rem, 6vw, 9rem)',
+                  color: '#000000',
+                  letterSpacing: '0.01em',
                 }}>
-                  {String(i + 1).padStart(2, '0')}
+                  ({String(reverseNum).padStart(2, '0')})
                 </span>
                 <h2 className="era-row__name">
                   {cat.name}
                 </h2>
                 <span className="era-row__arrow" style={{ fontSize: 'clamp(14px, 2vw, 22px)', color: 'var(--muted)' }}>→</span>
               </a>
-            ))}
+            )
+            })}
           </div>
         </section>
       </main>

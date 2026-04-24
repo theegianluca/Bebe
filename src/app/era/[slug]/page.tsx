@@ -38,16 +38,53 @@ export default async function EraPage({ params }: Props) {
 
         <header style={{
           padding: 'clamp(140px, 18vw, 260px) clamp(32px, 6vw, 100px) clamp(80px, 10vw, 140px)',
+          position: 'relative',
+          overflow: 'hidden',
         }}>
-          <a href="/" className="back-link reveal" style={{ marginBottom: 'clamp(48px, 7vw, 90px)', display: 'inline-flex', color: 'var(--muted)' }}>
+
+          {/* Ghost era name in background */}
+          <div aria-hidden="true" style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'flex-end',
+            paddingLeft: 'clamp(16px, 4vw, 60px)',
+            paddingBottom: 'clamp(20px, 4vw, 60px)',
+            pointerEvents: 'none',
+            overflow: 'hidden',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font)',
+              fontWeight: 700,
+              fontSize: 'clamp(18vw, 24vw, 36vw)',
+              letterSpacing: '0.02em',
+              lineHeight: 0.82,
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.04)',
+              whiteSpace: 'nowrap',
+              userSelect: 'none',
+            }}>
+              {category.name}
+            </span>
+          </div>
+
+          <a href="/" className="back-link reveal" style={{ marginBottom: 'clamp(48px, 7vw, 90px)', display: 'inline-flex', color: 'var(--text)', position: 'relative', zIndex: 1 }}>
             ← HOME
           </a>
 
-          <div className="reveal" style={{ '--reveal-delay': '0.1s' } as CSSProperties}>
+          <div className="reveal" style={{ '--reveal-delay': '0.1s', position: 'relative', zIndex: 1 } as CSSProperties}>
+            <span style={{
+              display: 'block',
+              fontSize: 'clamp(8rem, 16vw, 20rem)',
+              color: 'rgba(255,150,150,0.9)',
+              lineHeight: 0.85,
+              marginBottom: '0.25em',
+            }}>★</span>
             <p style={{
-              fontSize: '8px',
-              color: 'rgba(255,255,255,0.28)',
-              letterSpacing: '0.5em',
+              fontFamily: 'var(--font-text)',
+              fontSize: 'var(--text-xs)',
+              color: 'rgba(255,255,255,1)',
+              letterSpacing: '0.4em',
               textTransform: 'uppercase',
               marginBottom: 'clamp(16px, 2.5vw, 32px)'
             }}>
@@ -55,6 +92,7 @@ export default async function EraPage({ params }: Props) {
             </p>
             <h1 style={{
               fontFamily: 'var(--font)',
+              fontWeight: 700,
               fontSize: 'var(--text-2xl)',
               letterSpacing: '0.02em',
               lineHeight: 0.88,
@@ -69,11 +107,14 @@ export default async function EraPage({ params }: Props) {
               className="reveal"
               style={{
                 '--reveal-delay': '0.22s',
-                color: 'rgba(255,255,255,0.22)',
-                fontSize: '9px',
-                letterSpacing: '0.3em',
+                fontFamily: 'var(--font-text)',
+                fontSize: 'var(--text-xs)',
+                color: 'rgba(255,255,255,1)',
+                letterSpacing: '0.28em',
                 marginTop: 'clamp(28px, 4vw, 56px)',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                position: 'relative',
+                zIndex: 1,
               } as CSSProperties}
             >
               {items.length} {items.length === 1 ? 'ITEM' : 'ITEMS'}
@@ -85,7 +126,7 @@ export default async function EraPage({ params }: Props) {
           {items && items.length > 0 ? (
             <MasonryGallery items={items} />
           ) : (
-            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>No items yet in this era.</p>
+            <p style={{ fontFamily: 'var(--font-text)', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>No items yet in this era.</p>
           )}
         </section>
 

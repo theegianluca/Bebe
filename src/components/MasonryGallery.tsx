@@ -188,11 +188,6 @@ export function MasonryGallery({ items }: { items: Item[] }) {
 
   return (
     <>
-      {items.some(i => i.type === 'image') && (
-        <p style={{ fontSize: '8px', color: 'rgba(255,255,255,0.22)', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: 'clamp(40px, 6vw, 80px)' }}>
-          DRAG IMAGES TO SCATTER · DOUBLE-CLICK TO REMOVE · ESC TO CLEAR
-        </p>
-      )}
 
       <div className="masonry" ref={containerRef}>
         {displayList.map((entry, idx) => {
@@ -214,11 +209,10 @@ export function MasonryGallery({ items }: { items: Item[] }) {
             <div
               key={item.id}
               className="masonry-item masonry-reveal"
-              onMouseDown={(e) => handleGalleryMouseDown(e, item)}
               onClick={() => handleGalleryClick(item)}
               style={{
                 '--reveal-delay': delay,
-                cursor: item.type === 'image' ? (isLifted ? 'default' : 'grab') : 'pointer',
+                cursor: 'pointer',
                 userSelect: 'none',
                 visibility: isLifted ? 'hidden' : 'visible'
               } as CSSProperties}
@@ -237,7 +231,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
                         {item.title}
                       </p>
                     )}
-                    <p style={{ fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+                    <p style={{ fontFamily: 'var(--font-text)', fontSize: 'clamp(0.65rem, 1vw, 0.75rem)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)' }}>
                       {item.source}{item.year ? ` — ${item.year}` : ''}
                     </p>
                   </div>
@@ -260,7 +254,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
                     {item.content}
                   </p>
                   {item.source && (
-                    <p style={{ fontSize: '9px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: '20px' }}>
+                    <p style={{ fontFamily: 'var(--font-text)', fontSize: 'clamp(0.65rem, 1vw, 0.75rem)', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', textTransform: 'uppercase', marginTop: '20px' }}>
                       — {item.source}
                     </p>
                   )}
@@ -321,7 +315,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
             {selectedItem.type === 'image' ? (
               <img src={selectedItem.image_url} alt={selectedItem.title || ''} style={{ maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain', display: 'block' }} />
             ) : (
-              <div style={{ padding: 'clamp(40px, 6vw, 80px)', backgroundColor: 'var(--surface)', border: '1px solid var(--border)', maxWidth: '680px' }}>
+              <div style={{ padding: 'clamp(40px, 6vw, 80px)', backgroundColor: 'var(--surface)', border: '2px solid var(--border)', maxWidth: '680px' }}>
                 {selectedItem.title && (
                   <h2 style={{ fontFamily: 'var(--font)', fontSize: 'clamp(2rem, 4vw, 3.5rem)', letterSpacing: '0.04em', marginBottom: '28px' }}>
                     {selectedItem.title}
@@ -334,7 +328,7 @@ export function MasonryGallery({ items }: { items: Item[] }) {
               {selectedItem.title && (
                 <p style={{ fontFamily: 'var(--font)', fontSize: 'clamp(0.9rem, 1.5vw, 1.4rem)', letterSpacing: '0.06em' }}>{selectedItem.title}</p>
               )}
-              <p style={{ fontSize: '9px', color: 'var(--muted)', letterSpacing: '0.12em' }}>
+              <p style={{ fontFamily: 'var(--font-text)', fontSize: 'clamp(0.65rem, 1vw, 0.75rem)', color: 'var(--muted)', letterSpacing: '0.12em' }}>
                 {selectedItem.source}{selectedItem.year ? ` (${selectedItem.year})` : ''}
               </p>
             </div>
